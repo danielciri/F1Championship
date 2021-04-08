@@ -1,6 +1,7 @@
 package site.danielcirilo.springbboot.backend.apirest.f1.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -21,26 +22,26 @@ public class RaceServiceImpl implements IRaceService {
 	@Override
 	public List<Driver> findOne(String nameRace) {
 		ArrayList<Driver> drivers = new ArrayList<>();
-		
-		Driver driver;
-		for (Driver driverAux : parser.finAllDriver()) {
-			driver = driverAux;
+		Driver driver = null;
+		for (int j = 0; j < parser.getDrivers().size(); j++) {
+			Collections.sort(parser.getDrivers());
+			driver = parser.getDrivers().get(j);
 			ArrayList<Race> auxArrayRace = new ArrayList<>();
 			ArrayList<Race> races = (ArrayList<Race>) driver.getRaces();
-			for(Race race: races) {
+			for (int i = 0; i < races.size(); i++) {
+				if (races.get(i).getName().equalsIgnoreCase(nameRace)) {
+					auxArrayRace.add(new Race(races.get(i).getName(), races.get(i).getTime(), races.get(i).getMilisegundos()));
+					for (int k = 0; k < auxArrayRace.size(); k++) {
+						drivers.add(new Driver(driver.getName(), driver.getAge(), driver.getTeamName(), j + 1,
+								auxArrayRace, auxArrayRace.get(k).getMilisegundos()));
+						Collections.sort(drivers);
 
-				if(race.getName().equalsIgnoreCase(nameRace)) {
-					auxArrayRace.add(race);
-					driver.setRaces(auxArrayRace);
-					drivers.add(driver);
+					}
 				}
-		
 			}
-		
-			
 		}
 		
-		
+	
 		return drivers;
 	}
 

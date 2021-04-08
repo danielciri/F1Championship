@@ -29,7 +29,20 @@ public class Race implements Serializable, Comparable<Race> {
 		this.posicionDriver = posicionDriver;
 		this.milisegundos = milisegundos;
 	}
-	
+
+	public Race(String name, String time, long milisegundos) {
+
+		this.name = name;
+		this.time = time;
+
+		this.milisegundos = milisegundos;
+	}
+
+	public Race(long milisegundos) {
+
+		this.milisegundos = milisegundos;
+	}
+
 	public Race(int posicionDriver) {
 
 		this.posicionDriver = posicionDriver;
@@ -97,6 +110,4 @@ public class Race implements Serializable, Comparable<Race> {
 				+ ", milisegundos=" + milisegundos + "]";
 	}
 
-	
-	
 }

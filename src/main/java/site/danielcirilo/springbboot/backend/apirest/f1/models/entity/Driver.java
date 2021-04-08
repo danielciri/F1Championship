@@ -1,17 +1,12 @@
 package site.danielcirilo.springbboot.backend.apirest.f1.models.entity;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Driver implements Serializable, Comparable<Driver> {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private String picture;
@@ -53,11 +48,32 @@ public class Driver implements Serializable, Comparable<Driver> {
 
 	}
 
+
+
+	public Driver(String name, int age, String teamName, int globalPosition, ArrayList<Race> races, long milisegundos) {
+		this.milisegundos = milisegundos;
+		this.age = age;
+		this.name = name;
+		this.teamName = teamName;
+		this.globalPosition = globalPosition;
+		this.races = races;
+
+	}
+
+
 	public Driver(String name, String teamName, int globalPosition, String picture) {
 		this.name = name;
 		this.teamName = teamName;
 		this.globalPosition = globalPosition;
 		this.picture = picture;
+	}
+
+	public Driver(long milisegundos) {
+		this.milisegundos = milisegundos;
+	}
+
+	public Driver(ArrayList<Race> races) {
+		this.races = races;
 	}
 
 	public long getMilisegundos() {
@@ -124,39 +140,10 @@ public class Driver implements Serializable, Comparable<Driver> {
 		this.races = races;
 	}
 
-	public Long totalMilliSeconds() {
-		long totalDriverTime = 0;
-		for (int i = 0; i < races.size(); i++) {
-			long timeInMillis = timeParse(races.get(i).getTime()).getTime();
-
-			totalDriverTime += timeInMillis;
-		}
-
-		return totalDriverTime;
-	}
-
 	public ArrayList<Race> totalRaces() {
-	
 
 		return (ArrayList<Race>) races;
 
-	}
-
-	@Override
-	public String toString() {
-		return "Driver [picture=" + picture + ", age=" + age + ", name=" + name + ", teamName=" + teamName
-				+ races.toString() + " milisegundos totales" + totalMilliSeconds() + "  ]" + '\n';
-	}
-
-	public Date timeParse(String time) {
-		SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss.SS");
-		Date timeFormat = null;
-		try {
-			timeFormat = formato.parse(time);
-		} catch (ParseException ex) {
-			System.out.println(ex);
-		}
-		return timeFormat;
 	}
 
 	public int getGlobalPosition() {
@@ -167,10 +154,16 @@ public class Driver implements Serializable, Comparable<Driver> {
 		this.globalPosition = globalPosition;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "Driver [picture=" + picture + ", age=" + age + ", name=" + name + ", teamName=" + teamName
+				+ races.toString() + " milisegundos totales" + "  ]" + "  Miliseugnod solo" + milisegundos + '\n';
+	}
+
 	@Override
 	public int compareTo(Driver o) {
 		if (milisegundos < o.milisegundos) {
+
 			return -1;
 		}
 		if (milisegundos > o.milisegundos) {

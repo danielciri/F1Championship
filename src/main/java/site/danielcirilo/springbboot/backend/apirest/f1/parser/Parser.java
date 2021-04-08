@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.logging.Logger;
 import java.text.ParseException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,14 +16,32 @@ import org.json.JSONObject;
 
 import site.danielcirilo.springbboot.backend.apirest.f1.models.entity.Driver;
 import site.danielcirilo.springbboot.backend.apirest.f1.models.entity.Race;
+import site.danielcirilo.springbboot.backend.apirest.f1.utils.Lib;
 
+
+/**
+ * Esta clase se encarga se parsear el json a objetos java, existen maneras mas simples de parsear de json a java, esta
+ * es la manera que me han enseñado.
+ * @author dcirilol
+ *
+ */
 public class Parser {
+	/*ArrayList para ir almacenando los drivers que vamos obteniendo del json*/
 	private ArrayList<Driver> drivers;
+	/*ArrayList para ir almacenando las races que vamos obteniendo del json*/
 	private ArrayList<Race> races;
+	/*Declaramos un buffereader para ir obteni*/
 	private BufferedReader br;
-
+	
+	/**
+	 * Constructor sin parametros, cada ves que instanciamos un objeto invoca inmediantamente al metodo de parser
+	 */
 	public Parser() {
-		parse();
+		if(parse()) {
+			parse();
+		}else {
+			System.err.println("error al parsear");
+		}
 	}
 
 	public boolean parse() {
@@ -33,13 +52,14 @@ public class Parser {
 		try {
 
 			br = new BufferedReader(new FileReader(
-					"C:\\Cursos\\Spring5\\workspace\\Spring-boot-backend-apirest-f1\\src\\main\\resources\\static\\drivers.json"));
+					"C:\\Cursos\\Spring5\\workspace\\Spring-boot-backend-apirest-f1\\src\\main\\resources\\static\\data.json"));
 
 			String linea = "";
 			while ((linea = br.readLine()) != null) {
 				json += linea;
 			}
-
+			//Una vez ya tenemos los JSON de cada archivo procedemos a parsearlo
+            //Cargamos los drivers
 			JSONArray jsonArray = new JSONArray(json);
 			// drivers = new Driver[jsonArray.length()];
 			for (int i = 0; i < jsonArray.length(); i++) {
@@ -51,33 +71,37 @@ public class Parser {
 				String driverTeam = jsonDriversObject.getString("team");
 				JSONArray jsonArrayRaces = jsonDriversObject.getJSONArray("races");
 				races = new ArrayList<>();
-				// long totalDriverTime = 0;
 				long timeInMillis = 0;
+				 //Cargamos las carreras que tiene cada driver
 				for (int j = 0; j < jsonArrayRaces.length(); j++) {
 					JSONObject jsonRaces = jsonArrayRaces.getJSONObject(j);
 					String raceName = jsonRaces.getString("name");
 					String time = jsonRaces.getString("time");
-					
-					timeInMillis = timeParse(time).getTime();
-					races.add(new Race(raceName, time, (j + 1), timeInMillis));
+					//Invocamos a la libreria que parsea el tiempo de String a date y hacemos un getTime
+					//Para obtener los milisegundos
+					timeInMillis = Lib.timeParse(time).getTime();
+					//Añadimos las races y las ordenamos
+					races.add(new Race(raceName, time,j+1,timeInMillis));
 					Collections.sort(races);
 
 				}
-
+				//Anadimos los drivers
 				drivers.add(new Driver(id, picture, age, driverName, driverTeam, races, timeInMillis));
-				Collections.sort(drivers);
+	
+				
 
 			}
-
+			
+			//Si hemos llegado hasta aquí, podemos asegurar que los documentos json han sido parseados
 			parsed = true;
 			br.close();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-		
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -85,48 +109,29 @@ public class Parser {
 
 	}
 
-	public Date timeParse(String time) {
-		SimpleDateFormat formato = new SimpleDateFormat("HH:mm:ss.SS");
-		Date timeFormat = null;
-		try {
-			timeFormat = formato.parse(time);
-		} catch (ParseException ex) {
-			System.out.println(ex);
-		}
-		return timeFormat;
-	}
 
-	public ArrayList<Driver> finAllDriver() {
+	/**
+	 * Hacemos un get para obtener los drivers ya parseados
+	 * @return nos retorna todos los drivers con sus races
+	 */
+	public ArrayList<Driver> getDrivers() {
 		return drivers;
 	}
 
 	public void setDrivers(ArrayList<Driver> drivers) {
 		this.drivers = drivers;
 	}
-
+	
+	/**
+	 * Obtenemos todas races del piloto
+	 * @returnos retorna las races
+	 */
 	public ArrayList<Race> getRaces() {
 		return races;
-	}
-
-	public void setRaces(ArrayList<Race> races) {
-		this.races = races;
-	}
-
-	public BufferedReader getBr() {
-		return br;
 	}
 
 	public void setBr(BufferedReader br) {
 		this.br = br;
 	}
-	
-	/**
-	public  Long milisegundos2tiempo(long timeInMillis){
-	    int mili = (int) (timeInMillis%1000); timeInMillis -= mili; timeInMillis /= 1000;
-	    int seconds = (int) (timeInMillis%60); timeInMillis -= seconds; timeInMillis /= 60;
-	    int mins = (int) (timeInMillis%60); timeInMillis -= mins; timeInMillis /= 60;
-	    int hours = (int) timeInMillis%24;
-	    return (long) (hours*1000*100*100 + mins*1000*100 + seconds*1000 + mili);
-	}
-	 **/
+
 }
