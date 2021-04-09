@@ -87,7 +87,7 @@ public class Parser {
 				}
 				//Anadimos los drivers
 				drivers.add(new Driver(id, picture, age, driverName, driverTeam, races, timeInMillis));
-	
+				Collections.sort(drivers);
 				
 
 			}
