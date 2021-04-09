@@ -16,9 +16,10 @@ public class Race implements Serializable, Comparable<Race> {
 
 	private long milisegundos;
 
-	public Race(String name, String time) {
+	public Race(String name, String time,int posicionDriver) {
 		this.name = name;
 		this.time = time;
+		this.posicionDriver = posicionDriver;
 
 	}
 
@@ -38,10 +39,7 @@ public class Race implements Serializable, Comparable<Race> {
 		this.milisegundos = milisegundos;
 	}
 
-	public Race(long milisegundos) {
 
-		this.milisegundos = milisegundos;
-	}
 
 	public Race(int posicionDriver) {
 

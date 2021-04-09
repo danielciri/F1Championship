@@ -61,7 +61,7 @@ public class Parser {
 			//Una vez ya tenemos los JSON de cada archivo procedemos a parsearlo
             //Cargamos los drivers
 			JSONArray jsonArray = new JSONArray(json);
-			// drivers = new Driver[jsonArray.length()];
+	
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonDriversObject = jsonArray.getJSONObject(i);
 				String id = jsonDriversObject.getString("_id");

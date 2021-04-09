@@ -46,10 +46,12 @@ public class RaceServiceImpl implements IRaceService {
 		for (int i = 0; i < drivers.size(); i++) {
 			ArrayList<Race> posiciones = new ArrayList<>();
 			for (int j = 0; j < auxArrayRace.size(); j++) {
-				posiciones.add((new Race(auxArrayRace.get(j).getName(), auxArrayRace.get(j).getTime(),i+1,auxArrayRace.get(j).getMilisegundos())));
+				posiciones.add((new Race(auxArrayRace.get(j).getName(), auxArrayRace.get(j).getTime(),i+1)));
 				
 			}
 		
+			
+			
 			drivers.get(i).setRaces(posiciones);
 		}
 			
